@@ -1,0 +1,102 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide circle
+
+Main o-- Controller
+class Main {
+ -_controller : Controller
+ +main() : int
+}
+
+Controller o-- View
+class Controller {
+ -_store : Store
+ -_view :View
+__
+ +Controller(view : View)
+ +Controller()
+ +cli()
+ +execute_cmd(cmd : int)
+ .. Commands ..
+ +add_product()
+ +list_all_products()
+ +add order()
+ +list_all_orders()
+ +easter_egg()
+ +help()
+ .. Helper Methods ..
+ -get_int(prompt : string) : int
+ -get_double(prompt : string) : double
+}
+
+Class View {
+ -_store : Store&
+ +View(store : Store&)
+ +main_menu() : string
+ +help() : string
+}
+
+Controller o-- Model
+View o-- Model
+
+package "Model" {
+class Product {
+ - _name : string
+ - _price : double
+__
+ +Product(name : string, price : double)
+ +name() : string
+ +price() : double
+..
+ +«friend» operator<<(ost : ostream&, product : Product) : ostream&
+}
+
+Product <|-- Product_order
+class Product_order {
+ -_quantity : int
+__
+ +Product_order(name : string, price : double, quantity : int)
+ +quantity() : int
+ +cost() : double
+..
+ +«friend» operator<<(ost : ostream&, po : Product_order) : ostream&
+}
+
+Order o-- Product_order
+class Order {
+ - _products : vector<Product_order>
+ - _email : string
+__
+ +Order(email : string)
+ +cost() : double
+ +add_product_order(po : Product_order)
+ +num_product_orders() : int
+ +product_order(index : int) : Product_order
+..
+ +«friend» operator<<(ost : ostream&, order : Order) : ostream&
+}
+
+Store o-- Product
+Store o-- Order
+'Store -- Product_order
+class Store {
+ -_name : string
+ -_products : vector<Product>
+ -_orders : vector<Order>
+ __
+ +Store(name : string)
+ +name() : string
+ .. Product Management ..
+ +add_product(product : Product)
+ +num_products() : int
+ +product(index : int) : Product
+ .. Order Management ..
+ +create_order(email : string) : int
+ +add_to_order(order_num: int, po : Product_order)
+ +num_orders() : int
+ +order(order_num : int) : Order
+ ..
+ +«friend»operator<<(ost : ostream&, store : Store) : ostream&
+}
+}
+@enduml

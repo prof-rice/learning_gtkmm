@@ -1,0 +1,14 @@
+printf 'CXXFLAGS += --std=c++17\n\n'
+
+FILES=
+for f in *.cpp ; do
+  F="${f%.cpp}"
+  FO="$F.o"
+  FILES="$FILES $FO"
+  printf '%s: %s *.h\n' $FO $f
+  printf '\t$(CXX) $(CXXFLAGS) -c %s -o %s\n' $f $FO
+done
+printf 'main: %s *.h\n' "$FILES"
+printf '\t$(CXX) $(CXXFLAGS) %s -o main\n' "$FILES"
+printf 'clean:\n\trm -f *.o *.gch a.out main\n\n'
+
